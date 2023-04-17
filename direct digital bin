@@ -1,0 +1,37 @@
+#include <Wire.h>
+#include <ZumoShield.h>
+
+int IRLeftPin = A0;\\lift IR sensor 
+int IRCenterPin = A4;\\ Middle Ir sensor 
+int IRRightPin = A3;\\ left IR sesor 
+
+void setup() {
+  Wire.begin();
+  pinMode(IRLeftPin, INPUT);
+  pinMode(IRCenterPin, INPUT);
+  pinMode(IRRightPin, INPUT);
+}
+
+void loop() {
+  int IRLeftValue = analogRead(IRLeftPin);
+  int IRCenterValue = analogRead(IRCenterPin);
+  int IRRightValue = analogRead(IRRightPin);
+
+  // check IR sensor values to decide the movement of robot
+  if (IRLeftValue < 500 && IRCenterValue > 500 && IRRightValue < 500) {
+    // move forward
+    ZumoMotors::setSpeeds(200, 200);
+  }
+  else if (IRLeftValue < 500 && IRCenterValue > 500 && IRRightValue > 500) {
+    // turn right
+    ZumoMotors::setSpeeds(100, -100);
+  }
+  else if (IRLeftValue > 500 && IRCenterValue > 500 && IRRightValue < 500) {
+    // turn left
+    ZumoMotors::setSpeeds(-100, 100);
+  }
+  else {
+    // stop
+    ZumoMotors::setSpeeds(0, 0);
+  }
+}
